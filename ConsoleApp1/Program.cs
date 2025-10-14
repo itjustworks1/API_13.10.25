@@ -27,12 +27,36 @@ namespace ConsoleApp1
             Console.WriteLine("Введите Id группы");
             int.TryParse(Console.ReadLine(), out int idGroup);
 
-            var result = await client.PostAsJsonAsync($"DB/GetListStudentByIdGroup", idGroup);
+            var result = await client.PostAsync($"DB/GetListStudentByIdGroup?idGroup="+idGroup, null);
             var content = await result.Content.ReadFromJsonAsync<IEnumerable<StudentDTO>>();
             foreach(StudentDTO student in content)
                 Console.WriteLine(student.LastName);
         }
 
+        static async Task GetCountGenderByIdGroup()
+        {
+            Console.WriteLine("Введите Id группы");
+            int.TryParse(Console.ReadLine(), out int idGroup);
+
+            var result = await client.PostAsync($"DB/GetCountGenderByIdGroup?idGroup=" +idGroup, null);
+            var content = await result.Content.ReadAsStringAsync();
+            Console.WriteLine(content);
+        }
+
+        static async Task GetListStudentNotInGroup()
+        {
+            var result = await client.PostAsync($"DB/GetListStudentNotInGroup", null);
+            var content = await result.Content.ReadFromJsonAsync<IEnumerable<StudentDTO>>();
+            foreach (StudentDTO student in content)
+                Console.WriteLine(student.LastName);
+        }
+        static async Task GetListGroupNotHaveStudent()
+        {
+            var result = await client.PostAsync($"DB/GetListGroupNotHaveStudent", null);
+            var content = await result.Content.ReadFromJsonAsync<IEnumerable<GroupDTO>>();
+            foreach (GroupDTO group in content)
+                Console.WriteLine(group.Title);
+        }
         static async Task Main(string[] args)
         {
             client.BaseAddress = new Uri("http://localhost:5205/api/");
@@ -47,6 +71,15 @@ namespace ConsoleApp1
                     //    break;
                     case 1:
                         await GetListStudentByIdGroupCommand();
+                        break;
+                    case 2:
+                        await GetCountGenderByIdGroup();
+                        break;
+                    case 3:
+                        await GetListStudentNotInGroup();
+                        break;
+                    case 4:
+                        await GetListGroupNotHaveStudent();
                         break;
                 }
             } while (true);
