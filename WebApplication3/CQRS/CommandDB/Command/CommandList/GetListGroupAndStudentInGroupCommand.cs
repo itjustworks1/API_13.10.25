@@ -18,15 +18,7 @@ namespace WebApplication3.CQRS.CommandDB.Command.CommandList
 
             public async Task<IEnumerable<GroupDTO>> HandleAsync(GetListGroupAndStudentInGroupCommand request, CancellationToken ct = default)
             {
-                var dbStudent = db.Students.ToList();
-                var dbGroup = db.Groups.ToList();
-                string[] massivGS = new string[dbGroup.Count];
-                int?[] massiv = new int?[dbStudent.Count];
-                for (int i = 0; i < dbStudent.Count; i++)
-                {
-                    massiv[i] = dbStudent[i].IdGroup;
-                }
-                return dbGroup.Select(s => new GroupDTO { Id = s.Id, Title = s.Title, IdSpecial = s.IdSpecial });
+                return db.Groups.Include(s => s.Students).Select(s => new GroupDTO { Id = s.Id, Title = s.Title, IdSpecial = s.IdSpecial, CountStudent = s.Students.Count });
             }
         }
     }

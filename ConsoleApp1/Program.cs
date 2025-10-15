@@ -57,6 +57,32 @@ namespace ConsoleApp1
             foreach (GroupDTO group in content)
                 Console.WriteLine(group.Title);
         }
+        static async Task GetListGroupAndStudentInGroup()
+        {
+            var result = await client.PostAsync($"DB/GetListGroupAndStudentInGroup", null);
+            var content = await result.Content.ReadFromJsonAsync<IEnumerable<GroupDTO>>();
+            foreach (GroupDTO group in content)
+                Console.WriteLine(group.Title + "\t" + group.CountStudent);
+        }
+        static async Task GetListGroupAndStudentInGroupByIdSpecial()
+        {
+            Console.WriteLine("Введите Id специальности");
+            int.TryParse(Console.ReadLine(), out int idSpecial);
+
+            var result = await client.PostAsync($"DB/GetListGroupAndStudentInGroupByIdSpecial?idSpecial="+idSpecial, null);
+            var content = await result.Content.ReadFromJsonAsync<IEnumerable<GroupDTO>>();
+            foreach (GroupDTO group in content)
+                Console.WriteLine(group.Title + "\t" + group.CountStudent);
+        }
+        static async Task AddGroupInSpecial()
+        {
+            Console.WriteLine("Введите Id специальности");
+            int.TryParse(Console.ReadLine(), out int idSpecial);
+            Console.WriteLine("Введите название группы");
+            string title = Console.ReadLine();
+
+            var result = await client.PostAsync($"DB/AddGroupInSpecial?idSpecial="+idSpecial+"&title="+title, null);
+        }
         static async Task Main(string[] args)
         {
             client.BaseAddress = new Uri("http://localhost:5205/api/");
@@ -80,6 +106,15 @@ namespace ConsoleApp1
                         break;
                     case 4:
                         await GetListGroupNotHaveStudent();
+                        break;
+                    case 5:
+                        await GetListGroupAndStudentInGroup();
+                        break;
+                    case 6:
+                        await GetListGroupAndStudentInGroupByIdSpecial();
+                        break;
+                    case 7:
+                        await AddGroupInSpecial();
                         break;
                 }
             } while (true);

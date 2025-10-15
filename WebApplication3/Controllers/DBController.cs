@@ -50,18 +50,42 @@ namespace WebApplication3.Controllers
             return Ok(result);
         }
 
-        //[HttpPost("GetListGroupAndStudentInGroup")]
-        //public async Task<ActionResult<int>> GetListGroupAndStudentInGroup()
-        //{
-        //    var command = new GetListGroupAndStudentInGroupCommand() {};
-        //    var result = await mediator.SendAsync(command);
-        //    return Ok(result);
-        //}
+        [HttpPost("GetListGroupAndStudentInGroup")]
+        public async Task<ActionResult<IEnumerable<GroupDTO>>> GetListGroupAndStudentInGroup()
+        {
+            var command = new GetListGroupAndStudentInGroupCommand() { };
+            var result = await mediator.SendAsync(command);
+            return Ok(result);
+        }
 
-        //[HttpPost("GetListGroupAndStudentInGroupByIdSpecial")]
-        //public async Task<ActionResult<int>> GetListGroupAndStudentInGroupByIdSpecial()
+        [HttpPost("GetListGroupAndStudentInGroupByIdSpecial")]
+        public async Task<ActionResult<IEnumerable<GroupDTO>>> GetListGroupAndStudentInGroupByIdSpecial(int idSpecial)
+        {
+            var command = new GetListGroupAndStudentInGroupByIdSpecialCommand() { IdSpecial = idSpecial };
+            var result = await mediator.SendAsync(command);
+            return Ok(result);
+        }
+
+        [HttpPost("AddGroupInSpecial")]
+        public async Task AddGroupInSpecial(int idSpecial, string title)
+        {
+            var command = new AddGroupInSpecialCommand() { IdSpecial = idSpecial,  Title = title };
+            await mediator.SendAsync(command);
+            return;
+        }
+
+        [HttpPost("TransferStudentToGroup")]
+        public async Task<ActionResult<IEnumerable<GroupDTO>>> TransferStudentToGroup(int idSpecial)
+        {
+            var command = new GetListGroupAndStudentInGroupByIdSpecialCommand() { IdSpecial = idSpecial };
+            var result = await mediator.SendAsync(command);
+            return Ok(result);
+        }
+
+        //[HttpPost("ReturnDuplicateStudent")]
+        //public async Task<ActionResult<IEnumerable<GroupDTO>>> ReturnDuplicateStudent(int idSpecial)
         //{
-        //    var command = new GetListGroupAndStudentInGroupByIdSpecialCommand() {};
+        //    var command = new GetListGroupAndStudentInGroupByIdSpecialCommand() { IdSpecial = idSpecial };
         //    var result = await mediator.SendAsync(command);
         //    return Ok(result);
         //}
