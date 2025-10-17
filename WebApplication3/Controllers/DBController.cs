@@ -75,20 +75,22 @@ namespace WebApplication3.Controllers
         }
 
         [HttpPost("TransferStudentToGroup")]
-        public async Task<ActionResult<IEnumerable<GroupDTO>>> TransferStudentToGroup(int idSpecial)
+        public async Task TransferStudentToGroup(int idGroup, int idStudent)
         {
-            var command = new GetListGroupAndStudentInGroupByIdSpecialCommand() { IdSpecial = idSpecial };
+            var command = new TransferStudentToGroupCommand() { IdGroup = idGroup, IdStudent = idStudent };
+            await mediator.SendAsync(command);
+            return;
+        }
+
+        [HttpPost("ReturnDuplicateStudent")]
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> ReturnDuplicateStudent()
+        {
+            var command = new ReturnDuplicateStudentCommand() {  };
             var result = await mediator.SendAsync(command);
             return Ok(result);
         }
 
-        //[HttpPost("ReturnDuplicateStudent")]
-        //public async Task<ActionResult<IEnumerable<GroupDTO>>> ReturnDuplicateStudent(int idSpecial)
-        //{
-        //    var command = new GetListGroupAndStudentInGroupByIdSpecialCommand() { IdSpecial = idSpecial };
-        //    var result = await mediator.SendAsync(command);
-        //    return Ok(result);
-        //}
+
 
     }
 }

@@ -18,8 +18,35 @@ namespace WebApplication3.CQRS.CommandDB.Command.CommandList
 
             public async Task<IEnumerable<StudentDTO>> HandleAsync(ReturnDuplicateStudentCommand request, CancellationToken ct = default)
             {
-                return await db.Students.Where(s => s.IdGroup == null).Select(s => new StudentDTO { Id = s.Id, FirstName = s.FirstName, Gender = s.Gender, LastName = s.LastName, Phone = s.Phone, IdGroup = s.IdGroup }).ToListAsync();
+                var stspisok = db.Students.ToList();
+                List<StudentDTO> students = [];
+                for (int j = 0; j < stspisok.Count; j++)
+                {
+                    for (int i = 1+j; i < stspisok.Count; i++)
+                    {
+                        Student st = stspisok[i];
+                        Student student = stspisok[j];
+                        if (
+                            student.FirstName == st.FirstName &&
+                            student.Gender == st.Gender &&
+                            student.IdGroup == st.IdGroup &&
+                            student.Phone == st.Phone &&
+                            student.LastName == st.LastName)
+                        {
+                            students.Add(new StudentDTO { FirstName = student.FirstName, Gender = student.Gender, LastName = student.LastName, Phone = student.Phone, IdGroup = student.IdGroup });
+                        }
+                    }
+                          
+                }
+                return students;
+    
             }
+
+
+            
         }
+        
     }
+    
 }
+

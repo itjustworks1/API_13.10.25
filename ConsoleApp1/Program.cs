@@ -83,6 +83,26 @@ namespace ConsoleApp1
 
             var result = await client.PostAsync($"DB/AddGroupInSpecial?idSpecial="+idSpecial+"&title="+title, null);
         }
+
+        static async Task TransferStudentToGroupCommand()
+        {
+            Console.WriteLine("Введите Id группы");
+            int.TryParse(Console.ReadLine(), out int idGroup);
+            Console.WriteLine("Введите Id студента");
+            int.TryParse(Console.ReadLine(), out int idStudent);
+
+            var result = await client.PostAsync($"DB/TransferStudentToGroup?idGroup=" + idGroup + "&idStudent=" + idStudent, null);
+        }
+
+        static async Task ReturnDuplicateStudent()
+        {
+            var result = await client.PostAsync($"DB/ReturnDuplicateStudent", null);
+            var content = await result.Content.ReadFromJsonAsync<IEnumerable<StudentDTO>>();
+            foreach (StudentDTO student in content)
+                Console.WriteLine(student.FirstName + " " + student.LastName + " " + student.Phone + " " + student.IdGroup);
+        }
+
+
         static async Task Main(string[] args)
         {
             client.BaseAddress = new Uri("http://localhost:5205/api/");
@@ -115,6 +135,12 @@ namespace ConsoleApp1
                         break;
                     case 7:
                         await AddGroupInSpecial();
+                        break;
+                    case 8:
+                        await TransferStudentToGroupCommand();
+                        break;
+                    case 9:
+                        await ReturnDuplicateStudent();
                         break;
                 }
             } while (true);

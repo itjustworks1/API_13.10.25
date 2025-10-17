@@ -22,9 +22,9 @@ namespace WebApplication3.CQRS.CommandDB.Command.CommandList
             public async Task<Unit> HandleAsync(TransferStudentToGroupCommand request, CancellationToken ct = default)
             {
                 var student = db.Students.FirstOrDefault(s => s.Id == request.IdStudent);
-                student.Id = request.IdGroup;
 
-                await db.Students.Where(s => s.IdGroup == null).Select(s => new StudentDTO { Id = s.Id, FirstName = s.FirstName, Gender = s.Gender, LastName = s.LastName, Phone = s.Phone, IdGroup = s.IdGroup }).ToListAsync();
+                student.IdGroup = request.IdGroup;
+                await db.SaveChangesAsync();
                 return Unit.Value;
             }
         }
