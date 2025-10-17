@@ -18,6 +18,11 @@ namespace WebApplication3.Controllers
             this.mediator = mediator;
         }
 
+        /// <summary>
+        /// Получить список студентов из группы по указанному индексу группы
+        /// </summary>
+        /// <param name="idGroup"></param>
+        /// <returns></returns>
         [HttpPost("GetListStudentByIdGroup")]
         public async Task<ActionResult<IEnumerable<StudentDTO>>> GetListStudentByIdGroup(int idGroup)
         {
@@ -26,6 +31,11 @@ namespace WebApplication3.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Получить информацию о кол-ве мальчиков и девочек в группе по указанному индексу группы
+        /// </summary>
+        /// <param name="idGroup"></param>
+        /// <returns></returns>
         [HttpPost("GetCountGenderByIdGroup")]
         public async Task<ActionResult<int>> GetCountGenderByIdGroup(int idGroup)
         {
@@ -34,6 +44,10 @@ namespace WebApplication3.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Получить список студентов, которые не привязаны ни к одной группе
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("GetListStudentNotInGroup")]
         public async Task<ActionResult<IEnumerable<StudentDTO>>> GetListStudentNotInGroup()
         {
@@ -42,6 +56,10 @@ namespace WebApplication3.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Получить список групп, в которых нет студентов
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("GetListGroupNotHaveStudent")]
         public async Task<ActionResult<IEnumerable<GroupDTO>>> GetListGroupNotHaveStudent()
         {
@@ -50,6 +68,10 @@ namespace WebApplication3.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Получить общую статистику по отделению - список групп с указанием кол-ва студентов в каждой группе
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("GetListGroupAndStudentInGroup")]
         public async Task<ActionResult<IEnumerable<GroupDTO>>> GetListGroupAndStudentInGroup()
         {
@@ -58,6 +80,11 @@ namespace WebApplication3.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Такая же задача, как п.5, но с указанием индекса конкретной специальности
+        /// </summary>
+        /// <param name="idSpecial"></param>
+        /// <returns></returns>
         [HttpPost("GetListGroupAndStudentInGroupByIdSpecial")]
         public async Task<ActionResult<IEnumerable<GroupDTO>>> GetListGroupAndStudentInGroupByIdSpecial(int idSpecial)
         {
@@ -66,6 +93,12 @@ namespace WebApplication3.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Добавление новой группы для указанной специальности
+        /// </summary>
+        /// <param name="idSpecial"></param>
+        /// <param name="title"></param>
+        /// <returns></returns>
         [HttpPost("AddGroupInSpecial")]
         public async Task AddGroupInSpecial(int idSpecial, string title)
         {
@@ -74,21 +107,31 @@ namespace WebApplication3.Controllers
             return;
         }
 
+        /// <summary>
+        /// Перевод указанного студента в указанную группу
+        /// </summary>
+        /// <param name="idStudent"></param>
+        /// <param name="idGroup"></param>
+        /// <returns></returns>
         [HttpPost("TransferStudentToGroup")]
-        public async Task<ActionResult<IEnumerable<GroupDTO>>> TransferStudentToGroup(int idSpecial)
+        public async Task TransferStudentToGroup(int idStudent, int idGroup)
         {
-            var command = new GetListGroupAndStudentInGroupByIdSpecialCommand() { IdSpecial = idSpecial };
+            var command = new TransferStudentToGroupCommand() { IdStudent = idStudent, IdGroup = idGroup };
+            await mediator.SendAsync(command);
+            return;
+        }
+
+        /// <summary>
+        /// Добавить метод, который возвратит дублирующегося студента (один и тот же человек в двух разных группах)
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ReturnDuplicateStudent")]
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> ReturnDuplicateStudent()
+        {
+            var command = new ReturnDuplicateStudentCommand();
             var result = await mediator.SendAsync(command);
             return Ok(result);
         }
-
-        //[HttpPost("ReturnDuplicateStudent")]
-        //public async Task<ActionResult<IEnumerable<GroupDTO>>> ReturnDuplicateStudent(int idSpecial)
-        //{
-        //    var command = new GetListGroupAndStudentInGroupByIdSpecialCommand() { IdSpecial = idSpecial };
-        //    var result = await mediator.SendAsync(command);
-        //    return Ok(result);
-        //}
 
     }
 }
