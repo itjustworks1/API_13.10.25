@@ -21,11 +21,11 @@
                 <Button Content="Получить данные" Margin="5" Click="GetListGroupAndStudentInGroupByIdSpecial"/>
             </StackPanel>
             <Button Content="Очистить" Margin="5" VerticalAlignment="Bottom" Click="GetListGroupAndStudentInGroup"/>
-            <Button Content="Добавить" Margin="5" VerticalAlignment="Bottom"/>
+            <Button Content="Добавить" Margin="5" VerticalAlignment="Bottom" Click="OpenAddWindow"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.RowSpan="2">
-            <Button Content="Окно списков без данных" Margin="5"/>
-            <Button Content="Список дублирующихся" Margin="5"/>
+            <Button Content="Окно списков без данных" Margin="5" Click="OpenWithoutWindow"/>
+            <Button Content="Список дублирующихся" Margin="5" Click="OpenDublicateWindow"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5">
             <ListView ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedGroup}">

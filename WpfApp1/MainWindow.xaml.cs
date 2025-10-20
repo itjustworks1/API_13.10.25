@@ -22,7 +22,7 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        HttpClient httpClient = new HttpClient();
+        HttpClient client = new HttpClient();
         private List<GroupDTO> groups = [];
         private List<StudentDTO> students = [];
         private GroupDTO selectedGroup;
@@ -33,41 +33,54 @@ namespace WpfApp1
         public event PropertyChangedEventHandler? PropertyChanged;
         public void Signal([CallerMemberName] string? prop = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 
-        public List<GroupDTO> Groups { get => groups; set { groups = value; Signal(); if (SelectedGroup != null) GetCountGenderByIdGroup(); } }
+        public List<GroupDTO> Groups { get => groups; set { groups = value; Signal(); } }
         public List<StudentDTO> Students { get => students; set { students = value; Signal(); } }
-        public GroupDTO SelectedGroup { get => selectedGroup; set { selectedGroup = value; Signal(); } }
+        public GroupDTO SelectedGroup
+        {
+            get => selectedGroup;
+            set
+            {
+                selectedGroup = value;
+                Signal();
+                if (selectedGroup != null)
+                {
+                    GetCountGenderByIdGroup();
+                    GetListStudentByIdGroup();
+                }
+            }
+        }
         public StudentDTO SelectStudent { get => selectStudent; set { selectStudent = value; Signal(); } }
         public int SelectSpecialId { get => selectSpeciald; set { selectSpeciald = value; Signal(); } }
         public string CountGender { get => countGender; set { countGender = value; Signal(); } }
         public MainWindow()
         {
             InitializeComponent();
-            httpClient.BaseAddress = new Uri("http://localhost:5205/api/");
+            client.BaseAddress = new Uri("http://localhost:5205/api/");
             DataContext = this;
             GetListGroupAndStudentInGroup();
         }
         public async void GetCountGenderByIdGroup()
         {
-            var result = await httpClient.PostAsync($"DB/GetCountGenderByIdGroup?idGroup=" + SelectedGroup.Id, null);
+            var result = await client.PostAsync($"DB/GetCountGenderByIdGroup?idGroup=" + SelectedGroup.Id, null);
             var content = await result.Content.ReadAsStringAsync();
             CountGender = content;
         }
-        public async void GetListStudentByIdGroupCommand()
+        public async void GetListStudentByIdGroup()
         {
-            var result = await httpClient.PostAsync($"DB/GetListStudentByIdGroup?idGroup=" + SelectedGroup.Id, null);
+            var result = await client.PostAsync($"DB/GetListStudentByIdGroup?idGroup=" + SelectedGroup.Id, null);
             var content = await result.Content.ReadFromJsonAsync<IEnumerable<StudentDTO>>();
             Students = content.ToList();
         }
         public async void GetListGroupAndStudentInGroup()
         {
-            var result = await httpClient.PostAsync($"DB/GetListGroupAndStudentInGroup", null);
+            var result = await client.PostAsync($"DB/GetListGroupAndStudentInGroup", null);
             var content = await result.Content.ReadFromJsonAsync<IEnumerable<GroupDTO>>();
             Groups = content.ToList();
             SelectSpecialId = 0;
         }
         public async void GetListGroupAndStudentInGroupByIdSpecial()
         {
-            var result = await httpClient.PostAsync($"DB/GetListGroupAndStudentInGroupByIdSpecial?idSpecial=" + SelectSpecialId, null);
+            var result = await client.PostAsync($"DB/GetListGroupAndStudentInGroupByIdSpecial?idSpecial=" + SelectSpecialId, null);
             var content = await result.Content.ReadFromJsonAsync<IEnumerable<GroupDTO>>();
             Groups = content.ToList();
         }
@@ -75,5 +88,23 @@ namespace WpfApp1
         private void GetListGroupAndStudentInGroupByIdSpecial(object sender, RoutedEventArgs e) => GetListGroupAndStudentInGroupByIdSpecial();
 
         private void GetListGroupAndStudentInGroup(object sender, RoutedEventArgs e) => GetListGroupAndStudentInGroup();
+
+        private void OpenAddWindow(object sender, RoutedEventArgs e)
+        {
+            var window = new AddGroupWindow(client, SelectSpecialId);
+            window.ShowDialog();
+        }
+
+        private void OpenWithoutWindow(object sender, RoutedEventArgs e)
+        {
+            var window = new ListWithoutDataWindow(client);
+            window.ShowDialog();
+        }
+
+        private void OpenDublicateWindow(object sender, RoutedEventArgs e)
+        {
+            var window = new ListDublicateStudentWindow(client);
+            window.ShowDialog();
+        }
     }
 }
