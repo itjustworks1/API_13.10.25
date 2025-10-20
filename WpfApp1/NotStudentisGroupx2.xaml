@@ -1,13 +1,30 @@
-﻿<Window x:Class="WpfApp1.DuplicateStudent"
+﻿<Window x:Class="WpfApp1.NotStudentisGroupx2"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="DuplicateStudent" Height="350" Width="300">
+        Height="450" Width="400">
     <Grid>
-        <ListView Grid.Column="0" Grid.RowSpan="2" Background="Beige" ItemsSource="{Binding Students}"  >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="25*"/>
+        </Grid.ColumnDefinitions>
+        <ListView Grid.Column="1" Grid.RowSpan="2" Background="Beige" ItemsSource="{Binding Groups}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Название группы" DisplayMemberBinding="{Binding Title}"/>
+                </GridView>
+            </ListView.View>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Назад" Click="Close"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+        </ListView>
+
+        <ListView Grid.Column="0" Grid.RowSpan="2" Background="Beige" ItemsSource="{Binding Students}" >
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding FirstName}"/>
@@ -21,5 +38,6 @@
                 </ContextMenu>
             </ListView.ContextMenu>
         </ListView>
+
     </Grid>
 </Window>

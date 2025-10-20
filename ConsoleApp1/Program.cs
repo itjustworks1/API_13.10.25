@@ -101,6 +101,13 @@ namespace ConsoleApp1
             foreach (StudentDTO student in content)
                 Console.WriteLine(student.FirstName + " " + student.LastName + " " + student.Phone + " " + student.IdGroup);
         }
+        static async Task GetListSpecial()
+        {
+            var result = await client.PostAsync($"DB/GetListSpecial", null);
+            var content = await result.Content.ReadFromJsonAsync<IEnumerable<SpecialDTO>>();
+            foreach (SpecialDTO special in content)
+                Console.WriteLine(special.Title );
+        }
 
 
         static async Task Main(string[] args)
@@ -141,6 +148,9 @@ namespace ConsoleApp1
                         break;
                     case 9:
                         await ReturnDuplicateStudent();
+                        break;
+                    case 10:
+                        await GetListSpecial();
                         break;
                 }
             } while (true);

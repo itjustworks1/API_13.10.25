@@ -107,13 +107,15 @@ namespace WpfApp1
             CountGender = contents;
         }
 
-        private void ListGroup(object sender, RoutedEventArgs e)
+        private void ListGroupAStudent(object sender, RoutedEventArgs e)
         {
-
+            new NotStudentisGroupx2().Show();
+            Close();
         }
         private void AllListStat(object sender, RoutedEventArgs e)
         {
-
+            new AllStatisticGroup().Show();
+            Close();
         }
 
         private void ListDuplicate(object sender, RoutedEventArgs e)

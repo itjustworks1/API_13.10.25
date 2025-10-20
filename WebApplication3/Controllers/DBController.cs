@@ -3,6 +3,7 @@ using MyMediator.Types;
 using WebApplication3.CQRS.CommandDB.Command;
 using WebApplication3.CQRS.CommandDB.Command.CommandCount;
 using WebApplication3.CQRS.CommandDB.Command.CommandList;
+using WebApplication3.CQRS.CommandDB.Command.CommandSpecials;
 using WebApplication3.CQRS.CommandDB.DTO;
 using WebApplication3.CQRS.CommandTask1;
 
@@ -86,6 +87,13 @@ namespace WebApplication3.Controllers
         public async Task<ActionResult<IEnumerable<StudentDTO>>> ReturnDuplicateStudent()
         {
             var command = new ReturnDuplicateStudentCommand() {  };
+            var result = await mediator.SendAsync(command);
+            return Ok(result);
+        }
+        [HttpPost("GetListSpecial")]
+        public async Task<ActionResult<IEnumerable<SpecialDTO>>> GetListSpecial()
+        {
+            var command = new GetListSpecialCommand() {  };
             var result = await mediator.SendAsync(command);
             return Ok(result);
         }

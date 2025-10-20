@@ -19,15 +19,19 @@ using WpfApp1.DTO;
 namespace WpfApp1
 {
     /// <summary>
-    /// Логика взаимодействия для DuplicateStudent.xaml
+    /// Логика взаимодействия для NotStudentisGroupx2.xaml
     /// </summary>
-    public partial class DuplicateStudent : Window, INotifyPropertyChanged
+    public partial class NotStudentisGroupx2 : Window, INotifyPropertyChanged
     {
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void Signal([CallerMemberName] string prop = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-
-
+        public List<GroupDTO> Groups
+        {
+            get => groups;
+            set
+            {
+                groups = value;
+                Signal();
+            }
+        }
         public List<StudentDTO> Students
         {
             get => students;
@@ -37,25 +41,33 @@ namespace WpfApp1
                 Signal();
             }
         }
-        private List<StudentDTO> students = [];
-
 
         HttpClient client = new HttpClient();
-        public DuplicateStudent()
+        private List<GroupDTO> groups = [];
+        private List<StudentDTO> students = [];
+        public NotStudentisGroupx2()
         {
             InitializeComponent();
             client.BaseAddress = new Uri("http://localhost:5205/api/");
-            SetListDuplicateStudent();
+            SetListStudentNotGroup();
+            SetListGroupNotStudent();
             DataContext = this;
         }
-       
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void Signal([CallerMemberName] string prop = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 
-        private async void SetListDuplicateStudent()
+        private async void SetListStudentNotGroup()
         {
-            var result = await client.PostAsync($"DB/ReturnDuplicateStudent", null);
+            var result = await client.PostAsync($"DB/GetListStudentNotInGroup", null);
             var content = await result.Content.ReadFromJsonAsync<IEnumerable<StudentDTO>>();
             Students = content.ToList();
+        }
+        private async void SetListGroupNotStudent()
+        {
+            var result = await client.PostAsync($"DB/GetListGroupNotHaveStudent", null);
+            var content = await result.Content.ReadFromJsonAsync<IEnumerable<GroupDTO>>();
+            Groups = content.ToList();
         }
         private void Close(object sender, RoutedEventArgs e)
         {
